@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="HTML5 Basics Demo">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 Implementation</title>
+
+    <!-- INTERNAL CSS -->
+    <style>
+        /* Element selector */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Class selector */
+        .a1 {
+            background-color: #bce968;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        /* Class selector */
+        .a2 {
+            background-color: #6fdbfc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        /* Class selector */
+        .a3 {
+            background-color: #ee73b1;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        /* ID selector */
+        #main-heading {
+            color: rgb(0, 0, 0);
+            text-align: center;
+        }
+
+        /* Pseudo-class */
+        a:visited {
+            color: rgb(240, 7, 7);
+            text-decoration: underline;
+        }
+
+        /* Pseudo-element */
+        p::hover::after{
+            font-size: 24px;
+            color: rgb(243, 24, 24);
+        }
+
+        /* Pseudo-element */
+        h2::after {
+            content: " ★";
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- INLINE CSS -->
+    <h1 id="main-heading" style="background-color: rgb(34, 241, 214);">
+        Welcome to HTML5
+    </h1>
+
+    <p style="color: rgb(12, 0, 0);">
+        This page demonstrates basic HTML5 elements.
+    </p>
+
+    <hr>
+
+    <main>
+
+        <section class="a1">
+            <h2>Text Formatting</h2>
+            <p>
+                This is <b>bold</b> text, this is <i>italic</i> text, and this is 
+                <u>underlined</u> text.
+            </p>
+            <p>
+                You can also use <mark>highlighted</mark> text and 
+                <small>small</small> text.
+            </p>
+        </section>
+
+        <section class="a2">
+            <h2>Hyperlinks</h2>
+            <p>
+                Visit 
+                <a href="second.html" target="_blank">
+                    Click Here
+                </a>
+                to open a file containing other implementations of HTML5
+            </p>
+        </section>
+
+        <section class="a3">
+            <h2>HTML5 Elements</h2>
+            <article>
+                <p>
+                    HTML5 introduces semantic elements like 
+                    <code>&lt;header&gt;</code>, 
+                    <code>&lt;main&gt;</code>, 
+                    <code>&lt;section&gt;</code>, 
+                    <code>&lt;article&gt;</code>, and 
+                    <code>&lt;footer&gt;</code>.
+                </p>
+            </article>
+        </section>
+
+    </main>
+
+    <hr>
+
+    <footer>
+        <p style="text-align: center; color: gray;">
+            &copy; 2026 HTML5 Demo Page
+        </p>
+    </footer>
+
+</body>
+</html>
