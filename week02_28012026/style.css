@@ -1,0 +1,70 @@
+/* Element selector */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 20px;
+}
+
+/* Class selector */
+.box {
+    background-color: #bce968;
+    padding: 15px;
+    border: 2px solid #333;
+    margin-bottom: 20px;
+}
+
+.box2 {
+    background-color: #6fdbfc;
+    padding: 15px;
+    border: 2px solid #333;
+    margin-bottom: 20px;
+}
+/* Heading styling */
+h2 {
+    color: darkblue;
+}
+
+/* Table styling */
+table {
+    border-collapse: collapse;
+    width: 60%;
+}
+
+th, td {
+    border: 2px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+/* List styling */
+ol li {
+    color: brown;
+}
+
+ul li {
+    color: green;
+}
+
+/* Pseudo-class */
+a:hover {
+    color: red;
+}
+
+/* Pseudo-element */
+p::first-letter {
+    font-size: 22px;
+    color: purple;
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="password"] {
+    padding: 5px;
+}
+
+/* Iframe styling */
+iframe {
+    width: 560px;
+    height: 315px;
+    border: none;
+}
