@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+    <title>AngularJS Complete App</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #fafc7a00;
+        }
+
+        .container {
+            background: rgb(90, 230, 248);
+            padding: 20px;
+            width: 350px;
+            margin: auto;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 8px 0;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body ng-controller="studentController">
+
+<h1>AngularJS Hello World</h1>
+
+<!-- HELLO WORLD SECTION -->
+<div class="container">
+    <input type="text" ng-model="name" placeholder="Enter your name">
+    <h2>Hello {{ name }}</h2>
+</div>
+
+<hr>
+
+<!-- STUDENT FORM -->
+<div class="container">
+
+    <h2>Student Record</h2>
+
+    <form name="studentForm" ng-submit="addStudent()" novalidate>
+
+        <!-- Name -->
+        <input type="text" name="name" ng-model="student.name" placeholder="Enter Name" required>
+        <div class="error" ng-show="studentForm.name.$touched && studentForm.name.$invalid">
+            Name is required
+        </div>
+
+        <!-- Age -->
+        <input type="number" name="age" ng-model="student.age" placeholder="Enter Age" required min="1" max="100">
+        <div class="error" ng-show="studentForm.age.$touched && studentForm.age.$invalid">
+            Valid age required (1-100)
+        </div>
+
+        <!-- Course -->
+        <input type="text" name="course" ng-model="student.course" placeholder="Enter Course" required>
+        <div class="error" ng-show="studentForm.course.$touched && studentForm.course.$invalid">
+            Course is required
+        </div>
+
+        <br>
+
+        <button type="submit">Add Student</button>
+
+    </form>
+
+</div>
+
+<!-- STUDENT TABLE -->
+<h3>Student List</h3>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Course</th>
+        <th>Action</th>
+    </tr>
+
+    <tr ng-repeat="s in students">
+        <td>{{ s.name }}</td>
+        <td>{{ s.age }}</td>
+        <td>{{ s.course }}</td>
+        <td>
+            <button ng-click="deleteStudent($index)">Delete</button>
+        </td>
+    </tr>
+</table>
+
+<script>
+    var app = angular.module("studentApp", []);
+
+    app.controller("studentController", function($scope) {
+
+        // Hello world default
+        $scope.name = "World";
+
+        // Student array
+        $scope.students = [];
+
+        // Add student
+        $scope.addStudent = function() {
+
+            if ($scope.studentForm.$valid) {
+
+                $scope.students.push({
+                    name: $scope.student.name,
+                    age: $scope.student.age,
+                    course: $scope.student.course
+                });
+
+                // Reset form
+                $scope.student = {};
+                $scope.studentForm.$setPristine();
+                $scope.studentForm.$setUntouched();
+
+            } else {
+                alert("Please fill all fields correctly!");
+            }
+        };
+
+        // Delete student
+        $scope.deleteStudent = function(index) {
+            $scope.students.splice(index, 1);
+        };
+
+    });
+</script>
+
+</body>
+</html>

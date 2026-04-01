@@ -1,0 +1,76 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom,#22C1C3, #FDBB2D);
+  margin: 0;
+  padding: 0;
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  color: white;
+  margin-top: 20px;
+}
+
+/* Navbar */
+nav {
+  text-align: center;
+  margin: 15px 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Card container */
+.container {
+  width: 350px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* Input */
+input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Button */
+button {
+  padding: 10px 15px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a67d8;
+}
+
+/* List */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #f4f4f4;
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 5px;
+}
