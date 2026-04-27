@@ -17,51 +17,85 @@ import {
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Filler, Tooltip, Legend);
 
 export default function App() {
+
+  const BASE_URL = "https://orange-succotash-5gr7q5qprxx5c4v7r-5000.app.github.dev"; // 🔥 YOUR URL
+
   const [data, setData] = useState({
-    moisture: 41,
-    temperature: 23,
-    humidity: 60,
+    moisture: 0,
+    temperature: 0,
+    humidity: 0,
     pump: false,
-    auto: true,
+    auto: true
   });
 
   const [history, setHistory] = useState([50, 52, 48, 49, 51, 53, 50]);
 
+  // FETCH DATA
   useEffect(() => {
-    const interval = setInterval(() => {
-      setData(prev => {
-        const newMoisture = Math.floor(Math.random() * 100);
-        let pumpState = prev.pump;
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/data`);
+        const result = await res.json();
 
-        if (prev.auto) {
-          if (newMoisture < 40) pumpState = true;
-          if (newMoisture > 70) pumpState = false;
-        }
+        setData(result);
+        setHistory(prev => [...prev.slice(-6), result.moisture]);
 
-        return {
-          ...prev,
-          moisture: newMoisture,
-          temperature: Math.floor(Math.random() * 40),
-          humidity: Math.floor(Math.random() * 100),
-          pump: pumpState,
-        };
-      });
+      } catch (err) {
+        console.log("Error:", err);
+      }
+    };
 
-      setHistory(prev => [...prev.slice(-6), Math.random() * 100]);
-    }, 3000);
+    fetchData();
+    const interval = setInterval(fetchData, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const toggleAuto = () => {
-    setData(prev => ({ ...prev, auto: !prev.auto }));
+  // TOGGLE AUTO
+  const toggleAuto = async () => {
+    const newStatus = !data.auto;
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/auto`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      const result = await res.json();
+      setData(result); // 🔥 FIX
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const togglePump = () => {
+  // TOGGLE PUMP
+  const togglePump = async () => {
     if (data.auto) return;
-    setData(prev => ({ ...prev, pump: !prev.pump }));
+
+    const newStatus = !data.pump;
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/pump`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      const result = await res.json();
+      setData(result); // 🔥 FIX
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  // GRAPH DATA
   const chartData = {
     labels: ["00", "04", "08", "12", "16", "20", "24"],
     datasets: [
@@ -76,7 +110,7 @@ export default function App() {
       },
       {
         label: "Temp °C",
-        data: [22, 21, 22, 23, 24, 23, 22],
+        data: [22, 21, 23, 24, 25, 24, 23],
         borderColor: "#f97316",
         tension: 0.4,
         pointRadius: 0,
@@ -94,11 +128,7 @@ export default function App() {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-
-    layout: {
-      padding: 10
-    },
-
+    layout: { padding: 10 },
     plugins: {
       legend: {
         display: true,
@@ -106,11 +136,8 @@ export default function App() {
         align: "end"
       }
     },
-
     scales: {
-      x: {
-        grid: { display: false }
-      },
+      x: { grid: { display: false } },
       y: {
         min: 0,
         max: 100,
@@ -130,9 +157,7 @@ export default function App() {
         <div>
           <span className="tag">FIELD 01 · NORTH PLOT</span>
           <h1>IriCore.</h1>
-          <p className="sub">
-            Live telemetry from soil, air and pump nodes.
-          </p>
+          <p className="sub">Live telemetry from soil, air and pump nodes</p>
         </div>
 
         <div className="auto-box">
@@ -159,18 +184,13 @@ export default function App() {
         <div className="card">
           <h4>TEMPERATURE</h4>
           <h2>{data.temperature}°C</h2>
-
-          <div className="mini-graph">
-            {[10, 20, 15, 25, 18, 22].map((h, i) => (
-              <div key={i} style={{ height: h }}></div>
-            ))}
-          </div>
         </div>
 
         <div className="card">
           <h4>HUMIDITY</h4>
           <h2>{data.humidity}%</h2>
         </div>
+
       </div>
 
       {/* SECOND ROW */}
@@ -209,6 +229,7 @@ export default function App() {
             <Line data={chartData} options={chartOptions} />
           </div>
         </div>
+
       </div>
 
     </div>
