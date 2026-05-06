@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+
 import {
   Line
 } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
   LineElement,
@@ -14,12 +16,23 @@ import {
   Legend
 } from "chart.js";
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Filler, Tooltip, Legend);
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Filler,
+  Tooltip,
+  Legend
+);
 
 export default function App() {
 
-  const BASE_URL = "https://orange-succotash-5gr7q5qprxx5c4v7r-5000.app.github.dev"; // 🔥 YOUR URL
+  // BACKEND URL
+  const BASE_URL =
+    "https://orange-succotash-5gr7q5qprxx5c4v7r-5000.app.github.dev";
 
+  // MAIN DATA
   const [data, setData] = useState({
     moisture: 0,
     temperature: 0,
@@ -28,44 +41,74 @@ export default function App() {
     auto: true
   });
 
-  const [history, setHistory] = useState([50, 52, 48, 49, 51, 53, 50]);
+  // GRAPH HISTORY
+  const [history, setHistory] = useState([
+    50, 52, 48, 49, 51, 53, 50
+  ]);
 
-  // FETCH DATA
+  // FETCH LIVE DATA
   useEffect(() => {
+
     const fetchData = async () => {
       try {
+
         const res = await fetch(`${BASE_URL}/api/data`);
         const result = await res.json();
 
-        setData(result);
-        setHistory(prev => [...prev.slice(-6), result.moisture]);
+        console.log("LIVE DATA:", result);
+
+        // UPDATE UI
+        setData({
+          moisture: result.moisture,
+          temperature: result.temperature,
+          humidity: result.humidity,
+          pump: result.pump,
+          auto: result.auto
+        });
+
+        // UPDATE GRAPH
+        setHistory(prev => [
+          ...prev.slice(-6),
+          result.moisture
+        ]);
 
       } catch (err) {
-        console.log("Error:", err);
+        console.log("FETCH ERROR:", err);
       }
     };
 
+    // FIRST LOAD
     fetchData();
-    const interval = setInterval(fetchData, 3000);
+
+    // AUTO UPDATE EVERY 3 SEC
+    const interval = setInterval(() => {
+      fetchData();
+    }, 3000);
 
     return () => clearInterval(interval);
+
   }, []);
 
-  // TOGGLE AUTO
+  // TOGGLE AUTO MODE
   const toggleAuto = async () => {
+
     const newStatus = !data.auto;
 
     try {
+
       const res = await fetch(`${BASE_URL}/api/auto`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({
+          status: newStatus
+        })
       });
 
       const result = await res.json();
-      setData(result); // 🔥 FIX
+
+      setData(result);
 
     } catch (err) {
       console.log(err);
@@ -74,21 +117,26 @@ export default function App() {
 
   // TOGGLE PUMP
   const togglePump = async () => {
+
     if (data.auto) return;
 
     const newStatus = !data.pump;
 
     try {
+
       const res = await fetch(`${BASE_URL}/api/pump`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({
+          status: newStatus
+        })
       });
 
       const result = await res.json();
-      setData(result); // 🔥 FIX
+
+      setData(result);
 
     } catch (err) {
       console.log(err);
@@ -98,6 +146,7 @@ export default function App() {
   // GRAPH DATA
   const chartData = {
     labels: ["00", "04", "08", "12", "16", "20", "24"],
+
     datasets: [
       {
         label: "Soil %",
@@ -108,6 +157,7 @@ export default function App() {
         tension: 0.4,
         pointRadius: 0,
       },
+
       {
         label: "Temp °C",
         data: [22, 21, 23, 24, 25, 24, 23],
@@ -115,6 +165,7 @@ export default function App() {
         tension: 0.4,
         pointRadius: 0,
       },
+
       {
         label: "Humidity %",
         data: [60, 62, 61, 63, 64, 62, 65],
@@ -125,10 +176,15 @@ export default function App() {
     ]
   };
 
+  // GRAPH OPTIONS
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    layout: { padding: 10 },
+
+    layout: {
+      padding: 10
+    },
+
     plugins: {
       legend: {
         display: true,
@@ -136,11 +192,18 @@ export default function App() {
         align: "end"
       }
     },
+
     scales: {
-      x: { grid: { display: false } },
+      x: {
+        grid: {
+          display: false
+        }
+      },
+
       y: {
         min: 0,
         max: 100,
+
         grid: {
           color: "#e5e7eb",
           borderDash: [5, 5]
@@ -154,84 +217,128 @@ export default function App() {
 
       {/* HEADER */}
       <div className="header">
+
         <div>
-          <span className="tag">FIELD 01 · NORTH PLOT</span>
+          <span className="tag">
+            FIELD 01 · NORTH PLOT
+          </span>
+
           <h1>IriCore.</h1>
-          <p className="sub">Live telemetry from soil, air and pump nodes</p>
+
+          <p className="sub">
+            Live telemetry from soil, air and pump nodes
+          </p>
         </div>
 
+        {/* AUTO MODE */}
         <div className="auto-box">
-          <span className="auto-label">AUTO MODE</span>
+
+          <span className="auto-label">
+            AUTO MODE
+          </span>
 
           <label className="switch">
-            <input type="checkbox" checked={data.auto} onChange={toggleAuto} />
+
+            <input
+              type="checkbox"
+              checked={data.auto}
+              onChange={toggleAuto}
+            />
+
             <span className="slider"></span>
+
           </label>
         </div>
       </div>
 
-      {/* CARDS */}
+      {/* TOP CARDS */}
       <div className="cards">
 
+        {/* MOISTURE */}
         <div className="card">
+
           <h4>SOIL MOISTURE</h4>
+
           <h2>{data.moisture}%</h2>
+
           <div className="progress">
-            <div style={{ width: `${data.moisture}%` }} />
+            <div
+              style={{
+                width: `${data.moisture}%`
+              }}
+            />
           </div>
         </div>
 
+        {/* TEMPERATURE */}
         <div className="card">
+
           <h4>TEMPERATURE</h4>
+
           <h2>{data.temperature}°C</h2>
+
         </div>
 
+        {/* HUMIDITY */}
         <div className="card">
-          <h4>HUMIDITY</h4>
-          <h2>{data.humidity}%</h2>
-        </div>
 
+          <h4>HUMIDITY</h4>
+
+          <h2>{data.humidity}%</h2>
+
+        </div>
       </div>
 
       {/* SECOND ROW */}
       <div className="row">
 
+        {/* PUMP */}
         <div className="pump-card">
 
           <div className="pump-header">
+
             <span>PUMP CONTROL</span>
 
             <label className="switch">
+
               <input
                 type="checkbox"
                 checked={data.pump}
                 onChange={togglePump}
                 disabled={data.auto}
               />
+
               <span className="slider"></span>
+
             </label>
           </div>
 
-          <h2>{data.pump ? "PUMP ON" : "PUMP OFF"}</h2>
+          <h2>
+            {data.pump ? "PUMP ON" : "PUMP OFF"}
+          </h2>
 
           <p>
             {data.auto
               ? "Controlled by Auto mode"
               : "Manual control enabled"}
           </p>
-
         </div>
 
+        {/* GRAPH */}
         <div className="trend-card">
+
           <h4>24-HOUR TREND</h4>
 
           <div className="chart-wrapper">
-            <Line data={chartData} options={chartOptions} />
+
+            <Line
+              data={chartData}
+              options={chartOptions}
+            />
+
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }
